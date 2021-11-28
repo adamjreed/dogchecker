@@ -78,3 +78,26 @@ Resources:
                   - logs:CreateLogStream
                   - logs:PutLogEvents
                 Resource: '*'
+  CronTrigger:
+    Type: AWS::Events::Rule
+    Properties:
+      Description: "Trigger the lambda function on a regular schedule"
+      ScheduleExpression: "rate(5 minutes)"
+      State: "ENABLED"
+      Targets:
+        - Arn:
+            Fn::GetAtt:
+              - "Lambda"
+              - "Arn"
+          Id: "CronTriggerTarget"
+  PermissionForEventsToInvokeLambda:
+    Type: AWS::Lambda::Permission
+    Properties:
+      FunctionName:
+        Ref: "Lambda"
+      Action: "lambda:InvokeFunction"
+      Principal: "events.amazonaws.com"
+      SourceArn:
+        Fn::GetAtt:
+          - "CronTrigger"
+          - "Arn"
