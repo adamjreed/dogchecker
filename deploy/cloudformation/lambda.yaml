@@ -37,7 +37,7 @@ Resources:
           - Role
           - Arn
       Architectures:
-        - arm64
+        - x86_64
       Code:
         ImageUri: !Ref ImageUri
       Timeout: 300
