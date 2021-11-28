@@ -17,7 +17,7 @@ jobs:
         uses: actions/checkout@v2
 
       - name: AWS Setup
-        uses: ../actions/aws-setup.yaml
+        uses: ./.github/actions/aws-setup
 
       - name: Deploy CloudFormation Stack
         id: dogchecker-repo-stack
