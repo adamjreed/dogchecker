@@ -45,7 +45,11 @@ jobs:
           ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
         run: |
           # Build a docker container and push it to ECR
-                    docker build -f deploy/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA .
-                    echo "Pushing image to ECR..."
-                    docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA
-                    echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA"
+          docker build -f deploy/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA .
+          echo "Pushing image to ECR..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY
+          echo "Tagging image as $SHORT_SHA..."
+          docker tag $ECR_REGISTRY/$ECR_REPOSITORY $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA
+          echo "Pushing tag to ECR..."
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA"
