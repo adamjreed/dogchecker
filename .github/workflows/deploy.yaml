@@ -63,7 +63,7 @@ jobs:
           no-fail-on-empty-changeset: "1"
           parameter-overrides: >-
             FunctionName=${{ secrets.NAME }},
-            ImageUri=${{ steps.build-image.outputs.image }}
+            ImageUri=${{ steps.build-image.outputs.image }},
             Environment=${{ secrets.ENVIRONMENT }},
             PetfinderClientId=${{ secrets.PETFINDER_CLIENT_ID }},
             PetfinderClientSecret=${{ secrets.PETFINDER_CLIENT_SECRET }},
