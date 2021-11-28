@@ -29,7 +29,7 @@ jobs:
           template: deploy/cloudformation/container-repo.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: >-
-            RepoName=${{ github.event.inputs.reponame }}
+            RepoName=${{ secrets.REPO_NAME }}
 
       - name: Login to Amazon ECR
         id: login-ecr
