@@ -1,5 +1,31 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Description: A lambda that calls the Petfinder API, caches results, and emails any new dogs.
+Parameters:
+  FunctionName:
+    Type: String
+  ImageUri:
+    Type: String
+  Environment:
+    Type: String
+  PetfinderClientId:
+    Type: String
+  PetfinderClientSecret:
+    Type: String
+  RedisUrl:
+    Type: String
+  RedisPassword:
+    Type: String
+  MailerApiKey:
+    Type: String
+  MailerToName:
+    Type: String
+  MailerToAddress:
+    Type: String
+  MailerFromName:
+    Type: String
+  MailerFromAddress:
+    Type: String
+
 Resources:
   Lambda:
     Type: AWS::Lambda::Function
