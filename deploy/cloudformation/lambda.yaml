@@ -36,6 +36,8 @@ Resources:
         Fn::GetAtt:
           - Role
           - Arn
+      Architectures:
+        - arm64
       Code:
         ImageUri: !Ref ImageUri
       Timeout: 300
