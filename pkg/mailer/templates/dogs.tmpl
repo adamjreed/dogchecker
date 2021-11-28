@@ -1,0 +1,13 @@
+<h1>{{.Title}}</h1>
+<ul style="margin: 0; padding: 0;">
+    {{range .Dogs}}
+    <li style="display: block">
+        <a href="{{.Link}}">
+            {{if .Photo}}
+            <img style="display: block;" src="{{.Photo}}" alt="{{.Name}}"/>
+            {{end}}
+            <span>{{.Name}}</span>
+        </a>
+    </li>
+    {{end}}
+</ul>
