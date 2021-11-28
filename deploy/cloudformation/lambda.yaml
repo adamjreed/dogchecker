@@ -36,7 +36,8 @@ Resources:
         Fn::GetAtt:
           - Role
           - Arn
-      Code: !Ref ImageUri
+      Code:
+        ImageUri: !Ref ImageUri
       Timeout: 300
       Environment:
         Variables:
