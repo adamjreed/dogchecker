@@ -7,7 +7,7 @@ on:
     inputs: { }
 jobs:
   deploy-image:
-    name: Deploy container image to ECR
+    name: Run Deploy
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -21,7 +21,7 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: us-east-1
 
-      - name: Create Repo
+      - name: Create ECR Repo
         id: dogchecker-repo-stack
         uses: aws-actions/aws-cloudformation-github-deploy@v1
         with:
@@ -29,7 +29,7 @@ jobs:
           template: deploy/cloudformation/container-repo.yaml
           no-fail-on-empty-changeset: "1"
           parameter-overrides: >-
-            RepoName=${{ secrets.REPO_NAME }}
+            RepoName=${{ secrets.NAME }}
 
       - name: Login to Amazon ECR
         id: login-ecr
@@ -38,11 +38,11 @@ jobs:
       - name: Add SHORT_SHA to environment variable
         run: echo "SHORT_SHA=`git rev-parse --short HEAD`" >> $GITHUB_ENV
 
-      - name: Build, tag, and push the image
+      - name: Build, Tag, and Push the Image
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: ${{ secrets.REPO_NAME }}
+          ECR_REPOSITORY: ${{ secrets.NAME }}
         run: |
           # Build a docker container and push it to ECR
           docker build -f deploy/Dockerfile -t $ECR_REGISTRY/$ECR_REPOSITORY .
@@ -53,3 +53,24 @@ jobs:
           echo "Pushing tag to ECR..."
           docker push $ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA
           echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$SHORT_SHA"
+
+      - name: Deploy Lambda
+        id: dogchecker-lambda-stack
+        uses: aws-actions/aws-cloudformation-github-deploy@v1
+        with:
+          name: dogchecker-lambda
+          template: deploy/cloudformation/lambda.yaml
+          no-fail-on-empty-changeset: "1"
+          parameter-overrides: >-
+            FunctionName=${{ secrets.NAME }},
+            ImageUri=${{ steps.build-image.outputs.image }}
+            Environment=${{ secrets.ENVIRONMENT }},
+            PetfinderClientId=${{ secrets.PETFINDER_CLIENT_ID }},
+            PetfinderClientSecret=${{ secrets.PETFINDER_CLIENT_SECRET }},
+            RedisUrl=${{ secrets.REDIS_URL }},
+            RedisPassword=${{ secrets.REDIS_PASSWORD }},
+            MailerApiKey=${{ secrets.MAILER_API_KEY }},
+            MailerToName=${{ secrets.MAILER_TO_NAME }},
+            MailerToAddress=${{ secrets.MAILER_TO_ADDRESS }},
+            MailerFromName=${{ secrets.MAILER_FROM_NAME }},
+            MailerFromAddress=${{ secrets.MAILER_FROM_ADDRESS }}
