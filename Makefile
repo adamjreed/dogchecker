@@ -1,4 +1,4 @@
-.PHONY: up down run logs deploy
+.PHONY: up down run logs
 
 up:
 	docker compose up --build -d
@@ -11,6 +11,3 @@ run:
 
 logs:
 	docker compose logs lambda -f
-
-deploy:
-	//do some deploy stuff
