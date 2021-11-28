@@ -19,7 +19,8 @@ type Config struct {
 }
 
 type RedisConfig struct {
-	BaseUrl string
+	BaseUrl  string
+	Password string
 }
 
 type MailerConfig struct {
@@ -36,7 +37,8 @@ func LoadConfig() (*Config, error) {
 			ClientSecret: getEnv("PETFINDER_CLIENT_SECRET", "apiSecret"),
 		},
 		Redis: &RedisConfig{
-			BaseUrl: getEnv("REDIS_URL", "redis:6379"),
+			BaseUrl:  getEnv("REDIS_URL", "redis:6379"),
+			Password: getEnv("REDIS_PASSWORD", ""),
 		},
 		Mailer: &mailer.Config{
 			ApiKey:      getEnv("MAILER_API_KEY", "apiKey"),

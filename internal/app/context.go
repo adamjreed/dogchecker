@@ -35,7 +35,7 @@ func CreateContext() (*Context, error) {
 		Client: petfinder.NewClient(conf.Petfinder.BaseUrl, conf.Petfinder.ClientId, conf.Petfinder.ClientSecret),
 		Cache: redis.NewClient(&redis.Options{
 			Addr:     conf.Redis.BaseUrl,
-			Password: "",
+			Password: conf.Redis.Password,
 			DB:       0,
 		}),
 		Mailer: mailClient,
