@@ -1,6 +1,9 @@
 AWSTemplateFormatVersion: '2010-09-09'
 Transform: 'AWS::Serverless-2016-10-31'
 Description: An ECR repo for DogChecker images.
+Parameters:
+  RepoName:
+    Type: String
 Resources:
   Repo:
     Type: AWS::ECR::Repository
